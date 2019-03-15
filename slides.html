@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title>reveal-md</title>
+    <link rel="stylesheet" href="./css/reveal.css" />
+    <link rel="stylesheet" href="./_assets/robot-lung.css" id="theme" />
+    <link rel="stylesheet" href="./css/highlight/zenburn.css" />
+    <link rel="stylesheet" href="./css/print/paper.css" type="text/css" media="print" />
+    <link rel="stylesheet" href="./_assets/slides.css" />
+
+  </head>
+  <body>
+    <div class="line top"></div>
+    <div class="line bottom"></div>
+    <div class="line left"></div>
+    <div class="line right"></div>
+      
+    <div class="reveal">
+      <div class="slides"><section  data-markdown><script type="text/template">
+
+## Cypress.io ja E2E: pintaraapaisu
+
+_Olisiko teillä hetki aikaa puhua selaintestauksesta?_
+</script></section><section ><section data-markdown><script type="text/template">
+## Olipa kerran tarve konffata testit
+
+- Tuhansia rivejä koodia frontissa <!-- .element: class="fragment" data-fragment-index="1" -->
+  * React & Redux <!-- .element: class="fragment" data-fragment-index="1" -->
+- Saman verran bäkkärissä <!-- .element: class="fragment" data-fragment-index="2" -->
+  * Node & Express <!-- .element: class="fragment" data-fragment-index="2" -->
+- Uusia featureja tulossa <!-- .element: class="fragment" data-fragment-index="3" -->
+- Tarve isoille refaktoroinneille <!-- .element: class="fragment" data-fragment-index="4" -->
+- 0 testiä <!-- .element: class="fragment" data-fragment-index="5" -->
+
+<aside class="notes"><ul>
+<li>Vähä aikaa sitte mun tiimi peri projektin <strong><code>{space}</code></strong></li>
+<li>tuhansia rivejä koodia frontissa, reactia ja reduxia</li>
+<li>about sama bäkkärissä</li>
+<li>uusia featureja tulossa</li>
+<li>tarvetta isoille refaktoroinneille</li>
+<li>0 testiä</li>
+</ul>
+</aside></script></section><section data-markdown><script type="text/template">
+## Tutkimaan JS-testauskirjastoja
+
+<video data-autoplay src="./assets/mita-helvettia.mov"></video>
+
+<aside class="notes"><p>Ei kun vaan nettiin tutkimaan mitä kirjastoi kannattais käyttää, näytti about tältä</p>
+<p>loppu: Joten syntyi lappu kanbanille...</p>
+</aside></script></section><section data-markdown><script type="text/template">
+![](./assets/todo.jpg) <!-- .element: style="max-height: calc(50vh)" -->
+
+<aside class="notes"><ul>
+<li>Millasia tunteita tää herättää?</li>
+<li>Mikä teil tulee ekana mieleen jos näkisitte tän teiän seinällä?</li>
+</ul>
+</aside></script></section><section data-markdown><script type="text/template">
+## Testauksen mielikuvia
+
+- Testaussysteemien konffaus on vaikeaa ja kestää kauan
+- Selaintestejä kirjoittaminen on tylsää <!-- .element: class="fragment" data-fragment-index="1" -->
+- Testivirheiden debuggaus on kryptistä <!-- .element: class="fragment" data-fragment-index="2" -->
+- End-to-end-testejä ei voi tehdä jos on frontti ja bäkki eri repoissa <!-- .element: class="fragment" data-fragment-index="3" -->
+- Traviksen testivirheiden selvittäminen on vaikeaa <!-- .element: class="fragment" data-fragment-index="4" -->
+
+<aside class="notes"><p>Itte ku tuijotin sitä lappua, mieleen tuli lähinnä tälläsii juttui.</p>
+<p>Konffaus: selenium</p>
+<ul>
+<li>Lopussa:<ul>
+<li>Onneks kuitenki Slackkiin kilahti inspiraatio</li>
+</ul>
+</li>
+</ul>
+</aside></script></section><section data-markdown><script type="text/template">
+![](./assets/joko-cypress-tulilla.png)
+</script></section></section><section ><section data-markdown><script type="text/template">
+## Cypress
+
+- Kokonaisvaltainen selaintestaus-framework
+
+![](./assets/cypress-timeline.png)
+
+<aside class="notes"><p>Oikeestaa voi kuvailla ku vaa kokonaisvaltasena testaus-frameworkkinä.
+Cypress on aika uus, tuli betasta ulos viime vuoden lopussa, mut on kuitenki todella
+hyvällä mallilla ja sen dokumentaatiot on tosi kattavat.</p>
+<p>Mut, en <strong>puhu</strong> paljoo, vaan mielummin näytän.</p>
+</aside></script></section><section data-markdown><script type="text/template">
+## Testauksen mielikuvia
+
+- Testaussysteemien konffaus on vaikeaa ja kestää kauan <!-- .element: class="fragment highlight-current-blue" data-fragment-index="1" -->
+- Selaintestejä kirjoittaminen on tylsää
+- Testivirheiden debuggaus on kryptistä
+- End-to-end-testejä ei voi tehdä jos on frontti ja bäkki eri repoissa
+- Traviksen testivirheiden selvittäminen on vaikeaa
+
+<aside class="notes"><p>Palaten viel edelliseen.</p>
+<p>Kuitenki nyt ku käydään läpi Cypressiä, käydään läpi samalla näitä harhaluuloja
+ja katotaan miten Cypress ratkasee nää.</p>
+<p>Aloitetaan ihan ekasta</p>
+</aside></script></section><section data-markdown><script type="text/template">
+<video data-autoplay src="./assets/selenium-troubleshooting.mov"></video>
+
+<aside class="notes"><p>Kuinka moni muistaa tän sivun?</p>
+</aside></script></section><section data-markdown><script type="text/template">
+## Cypress
+
+### Konffaus ei ole vaikeaa eikä kestä kauan
+
+```bash
+$ npm i --save-dev cypress
+$ npx cypress open
+```
+<!-- .element: class="fragment" data-fragment-index="1" -->
+
+```bash
+# Start app
+$ docker-compose up -d backend db
+$ npm start
+```
+<!-- .element: class="fragment" data-fragment-index="2" -->
+
+<aside class="notes"><ol>
+<li>Konffaus ei tosiaan ole vaikeeta.</li>
+</ol>
+<p><strong>tee ekat kaks komentoo nyt, muista alhaalla seuraava workspace</strong></p>
+<ol>
+<li>Sit vaa softa pystyyn ja ollaan valmiita kirjottelee testejä</li>
+</ol>
+</aside></script></section><section data-markdown><script type="text/template">
+## Testauksen mielikuvia
+
+- ~~Testaussysteemien konffaus on vaikeaa ja kestää kauan~~
+- Selaintestejä kirjoittaminen on tylsää <!-- .element: class="fragment highlight-current-blue" data-fragment-index="1" -->
+- Testivirheiden debuggaus on kryptistä
+- End-to-end-testejä ei voi tehdä jos on frontti ja bäkki eri repoissa
+- Traviksen testivirheiden selvittäminen on vaikeaa
+
+<aside class="notes"><p>Ja seuraavana <strong>{space}</strong></p>
+<p>Noh, testien kirjottaminen voi silti olla työlästä mut Cypress tekee siit kyl viihdyttävää</p>
+</aside></script></section><section data-markdown><script type="text/template">
+`integration/login.spec.js`
+
+```js
+const DEMO_DELAY = 0
+
+describe('Login page', () => {
+  beforeEach(() => {
+    cy.visit('http://localhost:3000')
+  })
+
+  it('shows an error if username or password is missing', () => {
+    cy.get('.loginpage-form input[name="username"]')
+      .type('testertester', { delay: DEMO_DELAY })
+
+    cy.get('.loginpage-form .loginpage-button')
+      .click()
+
+    cy.get('.notification')
+      .should('have.text', 'Username or password is missing!')
+  })
+})
+
+```
+
+<aside class="notes"><p>Joten kirjotetaan meidän eka testi.
+Täs on valmiina kirjautumiselle yks testi, demomielessä lisätty myös tuki hidastamiselle.</p>
+<p>Huomaako muuten kukaan mitä tost puuttuu mikä ohtun selenium-kokeissa varmaan löytyis? Ei oo for-looppia joka uudelleenyrittää jos elementti ei oo ehtiny näytölle. Cypress automaagisesti odottaa et elementit ilmestyy ja feilaa testin jos ne ei ikin ilmesty.</p>
+<p><strong>HOX</strong>: Eka ilman delay, sit <code>DEMO_DELAY = 100</code></p>
+</aside></script></section><section data-markdown><script type="text/template">
+## Testauksen harhaluuloja
+
+- ~~Testaussysteemien konffaus on vaikeaa ja kestää kauan~~
+- ~~Selaintestejä kirjoittaminen on tylsää~~
+- Testivirheiden debuggaus on kryptistä <!-- .element: class="fragment highlight-current-blue" data-fragment-index="1" -->
+- End-to-end-testejä ei voi tehdä jos on frontti ja bäkki eri repoissa
+- Traviksen testivirheiden selvittäminen on vaikeaa
+</script></section><section data-markdown><script type="text/template">
+`integration/login.spec.js`
+
+```js
+  it('shows username and logout button in navbar after successful login', () => {
+    cy.get('.loginpage-form input[name="username"]')
+      .type('testertester', { delay: DEMO_DELAY })
+    cy.get('.loginpage-form input[name="password"]')
+      .type('testertester123', { delay: DEMO_DELAY })
+
+    cy.get('.loginpage-form .loginpage-button')
+      .click()
+
+    cy.get('.navigation-bar-username')
+      .should('have.text', 'kathleenmaloy')
+    cy.get('.navigation-bar-logout-button')
+      .should('have.text', 'Log out')
+  })
+
+  it('shows an error if credentials are incorrect', () => {
+    cy.get('.loginpage-form input[name="username"]')
+      .type('testertester', { delay: DEMO_DELAY })
+    cy.get('.loginpage-form input[name="password"]')
+      .type('asdk1234refd', { delay: DEMO_DELAY })
+
+    cy.get('.loginpage-form .loginpage-button')
+      .click()
+
+    cy.get('.notification')
+      .should('have.text', 'Username or password is incorrect!')
+  })
+```
+
+<aside class="notes"><p>Joten lisätääs pari testii lisää.
+Eka tarkistaa et jos kirjautuminen onnistuu, käyttäjänimi ja logout-nappi näkyy ylhäällä.
+Toka tarkistaa et jos tunnarit oli väärin ni siit tulee virhe.</p>
+<p>Huomatkaa et meidän ei tarvii <code>beforeEach</code>:issä kirjautua ulos.
+Cypress tyhjentää keksit ja localStoragen ennen jokasta testia.</p>
+</aside></script></section><section data-markdown><script type="text/template">
+## Testauksen mielikuvia
+
+- ~~Testaussysteemien konffaus on vaikeaa ja kestää kauan~~
+- ~~Selaintestejä kirjoittaminen on tylsää~~
+- ~~Testivirheiden debuggaus on kryptistä~~
+- End-to-end-testejä ei voi tehdä jos on frontti ja bäkki eri repoissa <!-- .element: class="fragment highlight-current-blue" data-fragment-index="1" -->
+- Traviksen testivirheiden selvittäminen on vaikeaa
+
+<aside class="notes"><p>Meil ei nyt kauheesti oo tässä aikaa joten mennää suoraa syvään päätyyn. <strong><code>{space}</code></strong>
+End-to-end testit. Nyt siirrytään hetkeks siis Cypressistä Devops-hommiin.</p>
+</aside></script></section></section><section ><section data-markdown><script type="text/template">
+## E2E aka End-to-End-testaus
+
+- Käsitteenä voi viitata pariin eri asiaan
+  1. Testataan käyttötapaus alusta loppuun asti
+    * Kirjautuminen -> Tuotelistauksen selailu -> Ostoskoriin lisäys -> Kassa -> Checkout
+  2. Testataan sovellus "koko stackin läpi"
+    * Selain -> Frontend -> Backend -> Tietokanta -> Backend -> Frontend -> Selain
+    * "Black box"
+      * Käytetään samaa käyttöliittymää jota käyttäjäkin käyttää
+- Nyt puhutaan "koko stackin läpi" tapahtuvasta testauksesta
+
+<aside class="notes"><p>End-to-end testaus käsitteenä voi tosiaan viitata oman käsityksen mukaan pariin eri asiaan. <strong>(lue)</strong>. Nyt seuraavaks kuitenki keskitytään puhumaan siitä miten saadaan tietokanta, bäkkäri ja frontti kaikki pyörimään testejä varten.</p>
+</aside></script></section><section data-markdown><script type="text/template">
+## Olipa kerran työmaa
+
+- Frontend ja backend eri repoissa
+  - Travis ajaa molemmat, puskee uudet Docker-kuvat DockerHubiin
+- Tuotannossa docker-composella backendin tarvitsema PostgreSQL pystyyn
+  - Lisäksi myös nginx reverse proxynä
+    - studies.cs.helsinki.fi/projekti → localhost:1234
+    - studies.cs.helsinki.fi/projekti/api → localhost:4321/api
+
+- Miten saisi Traviksen ajamaan E2E-testit?
+
+<aside class="notes"><p>Joten palataan taas kerran tähän projektiin jonka mun tiimi peri.</p>
+</aside></script></section><section data-markdown><script type="text/template">
+## Traviksen puukotusta
+
+- Todellisuudessa nyt ollaan Traviksen käyttökohteen ulkopuolella
+  - Oikeasti pitäisi selvittää esim. Jenkinsiä, Azure DevOpsia, CircleCI:tä, jne.
+
+- Mutta...kuitenkin...
+  - Mitä jos frontin Travis pistäisi kaiken pystyyn docker-composella ja sitten ajaisi Cypress-testit?
+
+<aside class="notes"><p>Joten, kun Cypress ajaa testit frontendissa, mitä jos vaan pistäis frontin Traviksessa
+docker-composella kaikki pystyyn?</p>
+<p>Ja...näin me sit tehtiin <strong><code>{space}</code></strong></p>
+</aside></script></section><section data-markdown><script type="text/template">
+## Traviksen puukotusta
+
+![](./assets/e2e-arch.png) <!-- .element: style="border:none;box-shadow: none;" -->
+
+<aside class="notes"><p>Joten travis vetää DockerHubista bäkkärin, tietokannan ja nginxin, ja buildaa uuden kuvan siit tänhetkisestä testattavasta koodista. Ja sit ajaa Cypressin testit.</p>
+<p>Ja seuraavaksi sit paikallinen demo näistä. Traviksessa kestäis 5 minuuttia.</p>
+</aside></script></section></section><section ><section data-markdown><script type="text/template">
+## Testauksen mielikuvia
+
+- ~~Testaussysteemien konffaus on vaikeaa ja kestää kauan~~
+- ~~Selaintestejä kirjoittaminen on tylsää~~
+- ~~Testivirheiden debuggaus on kryptistä~~
+- ~~End-to-end-testejä ei voi tehdä jos on frontti ja bäkki eri repoissa~~
+- Traviksen testivirheiden selvittäminen on vaikeaa <!-- .element: class="fragment highlight-current-blue" data-fragment-index="1" -->
+
+<aside class="notes"><p>Joten nyt ku saadaan testit ajettua koko stackin läpi Traviksessa, jää vaan viimenen klassikko.
+Virheiden selvittäminen Traviksessa.</p>
+</aside></script></section><section data-markdown><script type="text/template">
+## Cypress
+
+### Traviksen testivirheiden selvittäminen on helppoa.
+
+- Screenshotit epäonnistuneista testeistä <!-- .element: class="fragment" data-fragment-index="1" -->
+- Video koko testin ajosta <!-- .element: class="fragment" data-fragment-index="1" -->
+
+- <!-- .element: class="fragment" data-fragment-index="2" --> [Build #652 failed](https://travis-ci.org/ohtuprojekti-ilmo/ohtuilmo-frontend/builds/498863535) <!-- .element: class="fragment" data-fragment-index="2" -->
+- <!-- .element: class="fragment" data-fragment-index="3" --> [Cypress dashboard](https://dashboard.cypress.io/#/projects/27w3df/runs/45/specs) <!-- .element: class="fragment" data-fragment-index="3" -->
+
+<aside class="notes"><p>Viimesenä muttei todellakaa vähäisempänä fiitsuna mitä Cypress tarjoaa on se, <strong><code>{space}</code></strong>
+että se osaa ottaa screenshotit epäonnistuvista testeistä ja videon koko testin ajosta.
+<strong>{space}</strong> Katotaas yhtä epäonnistunutta ajoa.</p>
+</aside></script></section></section><section ><section data-markdown><script type="text/template">
+## Testauksen mielikuvia
+
+- ~~Testaussysteemien konffaus on vaikeaa ja kestää kauan~~
+- ~~Selaintestejä kirjoittaminen on tylsää~~
+- ~~Testivirheiden debuggaus on kryptistä~~
+- ~~End-to-end-testejä ei voi tehdä jos on frontti ja bäkki eri repoissa~~
+- ~~Traviksen testivirheiden selvittäminen on vaikeaa~~
+</script></section><section data-markdown><script type="text/template">
+![](./assets/joko-cypress-tulilla.png)
+
+<aside class="notes"><p>Slackkiin &quot;joko cypress on tulilla&quot; vastaus &quot;no nyt on&quot;</p>
+</aside></script></section></section><section  data-markdown><script type="text/template">
+Kysymyksiä?</script></section></div>
+    </div>
+
+    <script src="./lib/js/head.min.js"></script>
+    <script src="./js/reveal.js"></script>
+
+    <script>
+      function extend() {
+        var target = {};
+        for (var i = 0; i < arguments.length; i++) {
+          var source = arguments[i];
+          for (var key in source) {
+            if (source.hasOwnProperty(key)) {
+              target[key] = source[key];
+            }
+          }
+        }
+        return target;
+      }
+
+      // Optional libraries used to extend on reveal.js
+      var deps = [
+        { src: './lib/js/classList.js', condition: function() { return !document.body.classList; } },
+        { src: './plugin/markdown/marked.js', condition: function() { return !!document.querySelector('[data-markdown]'); } },
+        { src: './plugin/markdown/markdown.js', condition: function() { return !!document.querySelector('[data-markdown]'); } },
+        { src: './plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+        { src: './plugin/zoom-js/zoom.js', async: true },
+        { src: './plugin/notes/notes.js', async: true },
+        { src: './plugin/math/math.js', async: true }
+      ];
+
+      // default options to init reveal.js
+      var defaultOptions = {
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        transition: 'default', // none/fade/slide/convex/concave/zoom
+        dependencies: deps,
+        margin: 0.2
+      };
+
+      // options from URL query string
+      var queryOptions = Reveal.getQueryHash() || {};
+
+      var options = extend(defaultOptions, {"transition":"slide"}, queryOptions);
+    </script>
+
+
+    <script>
+      Reveal.initialize(options);
+    </script>
+  </body>
+</html>
