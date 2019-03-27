@@ -1,0 +1,25 @@
+# cypress-e2e-slides
+
+Ohjelmistotuotantoprojektikurssin aikana pidetyn Cypress & E2E-testaus -esityksen slidet.
+
+## Buildaus
+
+Asenna ensin `reveal-md` npm:stä (`npm i -g reveal-md`).
+
+Kehitysmoodi live-reloadilla:
+
+```
+reveal-md --theme robot-lung.css --template reveal.html --css slides.css -- slides.md
+```
+
+Static buildi tuotantoa varten:
+
+```
+reveal-md --theme robot-lung.css --template reveal.html --css slides.css --static -- slides.md
+```
+
+Static buildin jälkeen saattaa joutua kopioimaan assetit+css:ät + muokata template manuaalisesti sisään, en jaksanut tutkia oikeita komentorivivipuja.
+
+## Branchit
+
+Sorsat `master`:issa, Zeit now:lla tuotannossa oleva versio `static`-branchillä
