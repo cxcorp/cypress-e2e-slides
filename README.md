@@ -3,6 +3,7 @@
 Ohjelmistotuotantoprojektikurssin aikana pidetyn Cypress & E2E-testaus -esityksen slidet. Esityksen kohderyhmä on toisen tai kolmannen vuoden opiskelijat.
 
 Slidet verkossa (paina S-näppäintä avataksesi muistiinpanot):
+
 https://cypress-e2e-esitys.heikkila.dev
 
 ## Branchit
