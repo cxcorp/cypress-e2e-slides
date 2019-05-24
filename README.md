@@ -1,6 +1,12 @@
 # cypress-e2e-slides
 
-Ohjelmistotuotantoprojektikurssin aikana pidetyn Cypress & E2E-testaus -esityksen slidet.
+Ohjelmistotuotantoprojektikurssin aikana pidetyn Cypress & E2E-testaus -esityksen slidet. Esityksen kohderyhmä on toisen tai kolmannen vuoden opiskelijat.
+
+https://cypress-e2e-esitys.heikkila.dev
+
+## Branchit
+
+Sorsat `master`:issa, Zeit now:lla tuotannossa oleva versio `static`-branchillä
 
 ## Buildaus
 
@@ -19,7 +25,3 @@ reveal-md --theme robot-lung.css --template reveal.html --css slides.css --stati
 ```
 
 Static buildin jälkeen saattaa joutua kopioimaan assetit+css:ät + muokata template manuaalisesti sisään, en jaksanut tutkia oikeita komentorivivipuja.
-
-## Branchit
-
-Sorsat `master`:issa, Zeit now:lla tuotannossa oleva versio `static`-branchillä
