@@ -1,6 +1,6 @@
 # cypress-e2e-slides
 
-Ohjelmistotuotantoprojektikurssin aikana pidetyn Cypress & E2E-testaus -esityksen slidet. Esityksen kohderyhmä on toisen tai kolmannen vuoden opiskelijat.
+Ohjelmistotuotantoprojektikurssin aikana pidetyn Cypress & E2E-testaus -esityksen slidet. Esityksen kohderyhmä on toisen tai kolmannen vuoden opiskelijat HY:llä.
 
 Slidet verkossa (paina S-näppäintä avataksesi muistiinpanot):
 
